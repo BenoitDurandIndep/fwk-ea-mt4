@@ -1,0 +1,123 @@
+/* Code to copy paste in dbdiagram.io app */
+
+Table "asset" {
+  "SK_ASSET" int(11) [pk,not null, increment]
+  "CD_ASSET" varchar(20) [default: NULL]
+  "LIB_ASSET" varchar(100) [default: NULL]
+  "CD_MT4" varchar(20) [default: NULL]
+  "CD_TYPE" varchar(20) [default: NULL]
+  "DEFAULT_SPREAD" int(10) [default: NULL]
+  "BROKER" varchar(20) [default: NULL]
+  "COMMENT" varchar(100) [default: NULL]
+}
+
+Table "campaign" {
+  "SK_CAMPAIGN" int(10) [pk, not null, increment]
+  "SK_ROBOT" int(10) [default: NULL]
+  "CD_CAMPAIGN" varchar(50) [default: NULL]
+  "DESCRIPTION" varchar(500) [default: NULL]
+  "FILENAME" varchar(100) [default: NULL]
+  "DT_START" date [default: NULL]
+  "TOP_ACTIVE" tinyint(4) [default: 1]
+
+Indexes {
+  CD_CAMPAIGN [name: "IX_CD_CAMPAIGN"]
+}
+}
+
+Table "list_values" {
+  "SK_LIST_VALUES" int(11) [pk,not null, increment]
+  "VALUE" varchar(500) [default: NULL]
+}
+
+Table "parameter" {
+  "SK_PARAM" int(10) [pk, not null, increment]
+  "SK_ROBOT" int(10) [default: NULL]
+  "NAME" varchar(50) [default: NULL]
+  "DESCRIPTION" varchar(500) [default: NULL]
+  "DEFAULT_VALUE" varchar(100) [default: NULL]
+
+Indexes {
+  (NAME, SK_ROBOT) [unique, name: "U_PARAMETER"]
+}
+}
+
+Table "param_value" {
+  "SK_PARAM_VALUE" int(10) [pk, not null, increment]
+  "SK_PARAM" int(10) [not null, default: 0]
+  "SK_SCENARIO" int(10) [not null, default: 0]
+  "SK_LIST_VALUES" int(10) [default: 0]
+
+Indexes {
+  (SK_SCENARIO, SK_PARAM) [unique, name: "U_PARAM_VALUE"]
+  SK_SCENARIO [name: "PV_SK_SCENARIO"]
+  SK_PARAM [name: "PV_SK_PARAM"]
+}
+}
+
+Table "robot" {
+  "SK_ROBOT" int(10) [pk, not null, increment]
+  "CD_ROBOT" varchar(50) [default: NULL]
+  "DESCRIPTION" varchar(500) [default: NULL]
+  "CD_TYPE_TRADE" varchar(20) [default: NULL]
+  "CD_TYPE_ASSET" varchar(20) [default: NULL]
+  "STEP" varchar(20) [default: NULL]
+  "DT_START_DEV" date [default: NULL]
+  "DT_START_BACKTEST" date [default: NULL]
+  "DT_START_FWTEST" date [default: NULL]
+  "DT_GOLIVE" date [default: NULL]
+  "VERSION" varchar(10) [default: NULL]
+
+Indexes {
+  CD_ROBOT [name: "IX_CD_ROBOT"]
+}
+}
+
+Table "scenario" {
+  "SK_SCENARIO" int(10) [pk, not null, increment]
+  "SK_CAMPAIGN" int(10) [default: NULL]
+  "NUM_SCENARIO" int(10) [not null, default: 0]
+  "KEY_SCENARIO" int(11) [default: NULL]
+  "COMMENT" varchar(500) [default: NULL]
+  "HASH_PARAM" varchar(500) [default: NULL]
+
+Indexes {
+  (NUM_SCENARIO, SK_CAMPAIGN) [unique, name: "U_SCENARIO"]
+  KEY_SCENARIO [name: "SCENARIO_KEY_SCENARIO"]
+  SK_CAMPAIGN [name: "SCENARIO_SK_CAMPAIGN"]
+}
+}
+
+Table "test_result" {
+  "SK_TEST_RESULT" int(10) [pk, not null, increment]
+  "SK_SCENARIO" int(10) [default: NULL]
+  "SK_ASSET" int(10) [not null, default: 0]
+  "DT_START_TEST" date [default: NULL]
+  "DT_END_TEST" date [default: NULL]
+  "OPTIMISATION" bit(1) [default: NULL]
+  "CD_UT_TEST" varchar(10) [default: NULL]
+  "CD_UT_ENTRY" varchar(10) [default: NULL]
+  "SPREAD" int(10) [default: NULL]
+  "BALANCE_BEFORE" float [default: NULL]
+  "PROFIT" float [default: NULL]
+  "NB_TRADES" int(10) [default: NULL]
+  "MAX_PC_DRAWDOWN" float [default: NULL]
+  "MAX_VAL_DRAWDOWN" float [default: NULL]
+  "PROFIT_FACTOR" float [default: NULL]
+  "REM_FACTOR" float [default: NULL]
+  "DT_TEST" date [default: NULL]
+
+Indexes {
+  SK_ASSET [name: "IX_SK_ASSET"]
+  SK_SCENARIO [name: "IX_SK_SCENARIO"]
+}
+}
+
+Ref: campaign.SK_ROBOT > robot.SK_ROBOT
+Ref: scenario.SK_CAMPAIGN > campaign.SK_CAMPAIGN
+Ref: parameter.SK_ROBOT > robot.SK_ROBOT
+Ref: param_value.SK_PARAM > parameter.SK_PARAM 
+Ref: param_value.SK_SCENARIO > scenario.SK_SCENARIO
+Ref: param_value.SK_LIST_VALUES > list_values.SK_LIST_VALUES
+Ref: test_result.SK_SCENARIO > scenario.SK_SCENARIO
+Ref: test_result.SK_ASSET > asset.SK_ASSET
