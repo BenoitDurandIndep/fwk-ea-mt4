@@ -157,3 +157,16 @@ CREATE TABLE IF NOT EXISTS `test_result` (
 /*!40014 SET FOREIGN_KEY_CHECKS=IFNULL(@OLD_FOREIGN_KEY_CHECKS, 1) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40111 SET SQL_NOTES=IFNULL(@OLD_SQL_NOTES, 1) */;
+
+/* some examples of assets */
+INSERT INTO `asset` (`CD_ASSET`, `LIB_ASSET`, `CD_MT4`, `CD_TYPE`, `DEFAULT_SPREAD`, `BROKER`, `COMMENT`) VALUES
+	( 'EURUSD', 'FX PRO EURUSD', 'eurusd', 'CURRENCY', 20, 'FX PRO', 'Phase 1'),
+	( 'USDCAD', 'FX PRO USDCAD', 'usdcad', 'CURRENCY', 26, 'FX PRO', 'Phase 1'),
+	( 'AUDNZD', 'FX PRO AUDNZD', 'audnzd', 'CURRENCY', 45, 'FX PRO', 'Phase 1'),
+	( 'EURGBP', 'FX PRO EURGBP', 'eurgbp', 'CURRENCY', 24, 'FX PRO', 'Phase 1'),
+	( 'EURNZD', 'FX PRO EURNZD', 'eurnzd', 'CURRENCY', 50, 'FX PRO', 'Phase 1');
+
+/* the lines for the 2 examples */
+INSERT INTO `robot` (`CD_ROBOT`, `DESCRIPTION`, `CD_TYPE_TRADE`, `CD_TYPE_ASSET`, `STEP`, `DT_START_DEV`, `DT_START_BACKTEST`, `DT_START_FWTEST`, `DT_GOLIVE`, `VERSION`) VALUES
+	('Swing_3UT_Flex', 'Robot inspired by swing technique from DMT with flex UT and entry conditions', 'SWING', 'FOREX', NULL, NULL, NULL, NULL, NULL, 'V1'),
+	('Swing_NNFX_Index', 'Robot inspité de la méthode NNFX porté sur les indices et autres actifs', 'SWING', 'INDEX', NULL, NULL, NULL, NULL, NULL, 'V1');
